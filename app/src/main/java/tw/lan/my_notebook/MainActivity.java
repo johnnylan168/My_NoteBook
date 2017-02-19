@@ -1,5 +1,6 @@
 package tw.lan.my_notebook;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -82,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void aboutApp(View v)
     {
-        Toast.makeText(this, R.string.app_name, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+        startActivity(intent);
     }
 
     public void clickMenuItem(MenuItem item)
