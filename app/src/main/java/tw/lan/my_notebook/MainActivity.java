@@ -16,19 +16,35 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ListView item_list;
+    private TextView show_app_name;
+    private String[] data = {
+            "關於Android Tutorial的事情",
+            "一隻非常可愛的小狗狗!",
+            "一首非常好聽的音樂！"
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String[] data = {
-                "關於Android Tutorial的事情",
-                "一隻非常可愛的小狗狗!",
-                "一首非常好聽的音樂！"
-        };
+
+        processView();
+        processController();
+        
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
-        ListView item_list = (ListView) findViewById(R.id.item_list);
+
         item_list.setAdapter(adapter);
 
+
+    }
+
+    private void processView() {
+        item_list = (ListView) findViewById(R.id.item_list);
+        show_app_name = (TextView) findViewById(R.id.show_app_name);
+    }
+
+    private void processController() {
         AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -48,24 +64,22 @@ public class MainActivity extends AppCompatActivity {
 
         item_list.setOnItemClickListener(itemListener);
         item_list.setOnItemLongClickListener(itemLongListener);
-        TextView show_app_name = (TextView) findViewById(R.id.show_app_name);
 
-        View.OnClickListener listener = new View.OnClickListener() {
+        View.OnLongClickListener listener = new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 AlertDialog.Builder d =
                         new AlertDialog.Builder(MainActivity.this);
                 d.setTitle(R.string.app_name)
                         .setMessage(R.string.about)
                         .show();
+                return false;
             }
         };
 
-        show_app_name.setOnClickListener(listener);
+        show_app_name.setOnLongClickListener(listener);
     }
 
-    // 有宣告onClickListener監聽物件時，layout onclick則失去作用
-    // ex:TextView的aboutApp OnClick 和 OnClickListener
     public void aboutApp(View v)
     {
         Toast.makeText(this, R.string.app_name, Toast.LENGTH_LONG).show();
