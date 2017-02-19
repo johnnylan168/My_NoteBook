@@ -1,5 +1,6 @@
 package tw.lan.my_notebook;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,17 +14,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView item_list;
     private TextView show_app_name;
-    private String[] data = {
-            "關於Android Tutorial的事情",
-            "一隻非常可愛的小狗狗!",
-            "一首非常好聽的音樂！"
-    };
+    ArrayList<String> data = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
         processView();
         processController();
-        
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+
+        data.add("關於Android Tutorial的事情");
+        data.add("一隻非常可愛的小狗狗!");
+        data.add("一首非常好聽的音樂！");
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
 
         item_list.setAdapter(adapter);
-
-
     }
 
     private void processView() {
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this,
-                        data[position], Toast.LENGTH_LONG).show();
+                        data.get(position), Toast.LENGTH_LONG).show();
             }
         };
 
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this,
-                        "Long: " + data[position], Toast.LENGTH_LONG).show();
+                        "Long: " + data.get(position), Toast.LENGTH_LONG).show();
                 return true;
             }
         };
@@ -87,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     public void clickMenuItem(MenuItem item)
     {
         int itemId = item.getItemId();
@@ -95,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.search_item:
                 break;
             case R.id.add_item:
+                Intent intent = new Intent(MainActivity.this, ItemActivity.class);
+                startActivityForResult(intent, 0);
                 break;
             case R.id.revert_item:
                 break;
@@ -113,8 +122,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String titleText = data.getStringExtra("titleText");
+                this.data.add(titleText);
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
+
 }
