@@ -50,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this,
-                        data.get(position), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent("tw.lan.my_notebook.EDIT_ITEM");
+                intent.putExtra("position", position);
+                intent.putExtra("titleText", data.get(position));
+
+                startActivityForResult(intent, 1);
             }
         };
 
@@ -124,10 +127,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String titleText = data.getStringExtra("titleText");
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-                String titleText = data.getStringExtra("titleText");
                 this.data.add(titleText);
+                adapter.notifyDataSetChanged();
+            }
+        }else if (requestCode == 1) {
+            int position = data.getIntExtra("position", -1);
+            Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
+            if (position != -1) {
+                this.data.set(position, titleText);
                 adapter.notifyDataSetChanged();
             }
         }

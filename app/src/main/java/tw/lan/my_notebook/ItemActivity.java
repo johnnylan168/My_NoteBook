@@ -12,6 +12,7 @@ public class ItemActivity extends AppCompatActivity {
 
     private EditText title_text;
     private EditText content_text;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,15 @@ public class ItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item);
 
         processView();
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+
+        if (action.equals("tw.lan.my_notebook.EDIT_ITEM")) {
+            String titleText = intent.getStringExtra("titleText");
+            position = intent.getIntExtra("position", -1);
+            title_text.setText(titleText);
+        }
     }
 
     private void processView() {
@@ -35,6 +45,7 @@ public class ItemActivity extends AppCompatActivity {
             Intent result = new Intent();
             result.putExtra("titleText", titleText);
             result.putExtra("contentText", contentText);
+            result.putExtra("position", position);
 
             setResult(RESULT_OK, result);
         }
