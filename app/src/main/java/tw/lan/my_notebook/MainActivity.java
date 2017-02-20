@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.search_item:
                 break;
             case R.id.add_item:
-                Intent intent = new Intent(MainActivity.this, ItemActivity.class);
+                Intent intent = new Intent("tw.lan.my_notebook.ADD_ITEM");
                 startActivityForResult(intent, 0);
                 break;
             case R.id.revert_item:
@@ -117,28 +117,23 @@ public class MainActivity extends AppCompatActivity {
             case R.id.facebook_item:
                 break;
         }
-        new AlertDialog.Builder(this)
-                .setTitle("MenuItem Test")
-                .setMessage(item.getTitle())
-                .setIcon(item.getIcon())
-                .show();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
         String titleText = data.getStringExtra("titleText");
         if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
                 this.data.add(titleText);
                 adapter.notifyDataSetChanged();
-            }
         }else if (requestCode == 1) {
-            int position = data.getIntExtra("position", -1);
-            Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-            if (position != -1) {
-                this.data.set(position, titleText);
-                adapter.notifyDataSetChanged();
+                int position = data.getIntExtra("position", -1);
+                Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
+                if (position != -1) {
+                    this.data.set(position, titleText);
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     }
