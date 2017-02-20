@@ -15,14 +15,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView item_list;
     private TextView show_app_name;
-    ArrayList<String> data = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
+//    ArrayList<String> data = new ArrayList<>();
+//    private ArrayAdapter<String> adapter;
+
+    // ListView使用的自定Adapter物件
+    private ItemAdapter itemAdapter;
+    // 儲存所有記事本的List物件
+    private List<Item> items;
+
+    // 選單項目物件
+    private MenuItem add_item, search_item, revert_item, delete_item;
+
+    // 已選擇項目數量
+    private int selectedCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +44,26 @@ public class MainActivity extends AppCompatActivity {
         processView();
         processController();
 
-        data.add("關於Android Tutorial的事情");
-        data.add("一隻非常可愛的小狗狗!");
-        data.add("一首非常好聽的音樂！");
+//        data.add("關於Android Tutorial的事情");
+//        data.add("一隻非常可愛的小狗狗!");
+//        data.add("一首非常好聽的音樂！");
+//
+//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+//
+//        item_list.setAdapter(adapter);
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+        items = new ArrayList<Item>();
+        items.add(new Item(1, new Date().getTime(), Colors.RED, "關於Android Tutorial的事情.", "Hello content", "", "", 0, 0, 0));
+        items.add(new Item(2, new Date().getTime(), Colors.BLUE, "一隻非常可愛的小狗狗!", "她的名字叫「大熱狗」，又叫\n作「奶嘴」，是一隻非常可愛\n的小狗。", "", "", 0, 0, 0));
+        items.add(new Item(3, new Date().getTime(), Colors.GREEN, "一首非常好聽的音樂！", "Hello content", "", "", 0, 0, 0));
 
-        item_list.setAdapter(adapter);
+
+        // 建立自定Adapter物件
+        itemAdapter = new ItemAdapter(this, R.layout.singleitem, items);
+        item_list.setAdapter(itemAdapter);
     }
+
+
 
     private void processView() {
         item_list = (ListView) findViewById(R.id.item_list);
@@ -50,19 +74,19 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent("tw.lan.my_notebook.EDIT_ITEM");
-                intent.putExtra("position", position);
-                intent.putExtra("titleText", data.get(position));
-
-                startActivityForResult(intent, 1);
+//                Intent intent = new Intent("tw.lan.my_notebook.EDIT_ITEM");
+//                intent.putExtra("position", position);
+//                intent.putExtra("titleText", data.get(position));
+//
+//                startActivityForResult(intent, 1);
             }
         };
 
         AdapterView.OnItemLongClickListener itemLongListener = new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this,
-                        "Long: " + data.get(position), Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this,
+//                                "Long: " + data.get(position), Toast.LENGTH_LONG).show();
                 return true;
             }
         };
@@ -122,20 +146,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-        String titleText = data.getStringExtra("titleText");
-        if (requestCode == 0) {
-                this.data.add(titleText);
-                adapter.notifyDataSetChanged();
-        }else if (requestCode == 1) {
-                int position = data.getIntExtra("position", -1);
-                Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                if (position != -1) {
-                    this.data.set(position, titleText);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        }
+//        if (resultCode == RESULT_OK) {
+//        String titleText = data.getStringExtra("titleText");
+//        if (requestCode == 0) {
+//                this.data.add(titleText);
+//                adapter.notifyDataSetChanged();
+//        }else if (requestCode == 1) {
+//                int position = data.getIntExtra("position", -1);
+//                Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
+//                if (position != -1) {
+//                    this.data.set(position, titleText);
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }
+//        }
     }
 
 }
